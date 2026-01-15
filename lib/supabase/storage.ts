@@ -1,0 +1,175 @@
+"use client"
+
+import { createClient } from "./client"
+
+export type StorageBucket = "captures" | "previews" | "assets" | "contracts" | "avatars"
+
+class SupabaseStorage {
+  private supabase = createClient()
+
+  /**
+   * Upload a file to a storage bucket
+   */
+  async uploadFile(
+    bucket: StorageBucket,
+    path: string,
+    file: File,
+    options?: { upsert?: boolean },
+  ): Promise<{ url: string; path: string } | null> {
+    const { data, error } = await this.supabase.storage.from(bucket).upload(path, file, {
+      upsert: options?.upsert ?? false,
+      contentType: file.type,
+    })
+
+    if (error) {
+      console.error(`[v0] Error uploading to ${bucket}:`, error)
+      throw new Error(error.message)
+    }
+
+    const {
+      data: { publicUrl },
+    } = this.supabase.storage.from(bucket).getPublicUrl(data.path)
+
+    return {
+      url: publicUrl,
+      path: data.path,
+    }
+  }
+
+  /**
+   * Get a signed URL for private bucket access
+   */
+  async getSignedUrl(bucket: StorageBucket, path: string, expiresIn = 3600): Promise<string | null> {
+    const { data, error } = await this.supabase.storage.from(bucket).createSignedUrl(path, expiresIn)
+
+    if (error) {
+      console.error(`[v0] Error getting signed URL from ${bucket}:`, error)
+      return null
+    }
+
+    return data.signedUrl
+  }
+
+  /**
+   * Delete a file from storage
+   */
+  async deleteFile(bucket: StorageBucket, path: string): Promise<boolean> {
+    const { error } = await this.supabase.storage.from(bucket).remove([path])
+
+    if (error) {
+      console.error(`[v0] Error deleting from ${bucket}:`, error)
+      return false
+    }
+
+    return true
+  }
+
+  /**
+   * List files in a directory
+   */
+  async listFiles(bucket: StorageBucket, path?: string): Promise<{ name: string; id: string }[]> {
+    const { data, error } = await this.supabase.storage.from(bucket).list(path)
+
+    if (error) {
+      console.error(`[v0] Error listing files from ${bucket}:`, error)
+      return []
+    }
+
+    return data || []
+  }
+
+  /**
+   * Upload multiple capture images
+   */
+  async uploadCaptures(
+    forgeId: string,
+    files: File[],
+    onProgress?: (uploaded: number, total: number) => void,
+  ): Promise<{ url: string; path: string; fileName: string; angle: string }[]> {
+    const results: { url: string; path: string; fileName: string; angle: string }[] = []
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      const angle = `angle-${String(i + 1).padStart(3, "0")}`
+      const extension = file.name.split(".").pop() || "jpg"
+      const path = `${forgeId}/${angle}.${extension}`
+
+      try {
+        const result = await this.uploadFile("captures", path, file, { upsert: true })
+        if (result) {
+          results.push({
+            ...result,
+            fileName: file.name,
+            angle,
+          })
+        }
+      } catch (error) {
+        console.error(`[v0] Error uploading capture ${i + 1}:`, error)
+      }
+
+      onProgress?.(i + 1, files.length)
+    }
+
+    return results
+  }
+
+  /**
+   * Upload a preview image
+   */
+  async uploadPreview(
+    digitalTwinId: string,
+    file: File,
+    previewType: string,
+  ): Promise<{ url: string; path: string } | null> {
+    const extension = file.name.split(".").pop() || "jpg"
+    const timestamp = Date.now()
+    const path = `${digitalTwinId}/${previewType}_${timestamp}.${extension}`
+
+    return this.uploadFile("previews", path, file, { upsert: false })
+  }
+
+  /**
+   * Upload a visual asset
+   */
+  async uploadAsset(
+    digitalTwinId: string,
+    file: File,
+    category: string,
+  ): Promise<{ url: string; path: string } | null> {
+    const extension = file.name.split(".").pop() || "png"
+    const timestamp = Date.now()
+    const path = `${digitalTwinId}/${category}_${timestamp}.${extension}`
+
+    return this.uploadFile("assets", path, file, { upsert: false })
+  }
+
+  /**
+   * Upload an avatar
+   */
+  async uploadAvatar(userId: string, file: File): Promise<{ url: string; path: string } | null> {
+    const extension = file.name.split(".").pop() || "jpg"
+    const path = `${userId}/avatar.${extension}`
+
+    return this.uploadFile("avatars", path, file, { upsert: true })
+  }
+
+  /**
+   * Get public URL for an avatar
+   */
+  getAvatarUrl(userId: string): string {
+    const { data } = this.supabase.storage.from("avatars").getPublicUrl(`${userId}/avatar.jpg`)
+    return data.publicUrl
+  }
+}
+
+// Singleton instance
+let storageInstance: SupabaseStorage | null = null
+
+export function getStorage(): SupabaseStorage {
+  if (!storageInstance) {
+    storageInstance = new SupabaseStorage()
+  }
+  return storageInstance
+}
+
+export const storage = typeof window !== "undefined" ? getStorage() : null
