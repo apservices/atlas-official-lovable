@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "build:dev": "vite build --mode development"
+    "build:dev": "vite build --mode development",
     "dev": "next dev",
     "lint": "eslint .",
     "start": "next start"
@@ -71,6 +71,7 @@
     "postcss": "^8.5",
     "tailwindcss": "^4.1.9",
     "tw-animate-css": "1.3.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^6.0.0"
   }
 }
