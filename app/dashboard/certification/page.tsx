@@ -167,7 +167,7 @@ export default function CertificationPage() {
                           <div className="flex items-center gap-2">
                             <span className="font-mono text-xs">{forge.id}</span>
                             <span className="text-muted-foreground">-</span>
-                            <span>{model?.name || "Unknown"}</span>
+                            <span>{model?.full_name || "Unknown"}</span>
                           </div>
                         </SelectItem>
                       )
@@ -247,7 +247,7 @@ export default function CertificationPage() {
                             <Shield className="w-6 h-6 text-primary" />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-foreground">{model?.name || "Unknown"}</h3>
+                            <h3 className="font-semibold text-foreground">{model?.full_name || "Unknown"}</h3>
                             <p className="text-xs text-muted-foreground">{model?.internalId}</p>
                           </div>
                         </div>
@@ -310,7 +310,7 @@ export default function CertificationPage() {
             </AlertDialogTitle>
             <AlertDialogDescription className="space-y-3">
               <p>
-                You are about to certify <strong>{selectedModel?.name}</strong> as a verified Digital Twin.
+                You are about to certify <strong>{selectedModel?.full_name}</strong> as a verified Digital Twin.
               </p>
               <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm">
                 <strong>Warning:</strong> This action is permanent and irreversible. Once certified:

@@ -72,7 +72,7 @@ export function ConsentDialog({ model, onOpenChange, onConsented }: ConsentDialo
             Record Consent
           </DialogTitle>
           <DialogDescription>
-            Consent is mandatory before any forge operation can begin for {model?.name}.
+            Consent is mandatory before any forge operation can begin for {model?.full_name}.
           </DialogDescription>
         </DialogHeader>
 
@@ -98,7 +98,7 @@ export function ConsentDialog({ model, onOpenChange, onConsented }: ConsentDialo
             />
             <Label htmlFor="acknowledge" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
               I confirm that valid consent has been obtained from{" "}
-              <strong className="text-foreground">{model?.name}</strong> and all required documentation is on file.
+              <strong className="text-foreground">{model?.full_name}</strong> and all required documentation is on file.
             </Label>
           </div>
         </div>

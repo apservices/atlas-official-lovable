@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
+import { createClient } from "@supabase/supabase-js"
 import { Header } from "@/components/dashboard/header"
 import { dataStore } from "@/lib/data-store"
 import type { AuditLog, AuditAction, Model, Forge } from "@/lib/types"
@@ -35,6 +36,16 @@ import {
 import { format, isWithinInterval, startOfDay, endOfDay } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { DateRange } from "react-day-picker"
+
+interface SupabaseAuditLog {
+  id: string
+  actor_id: string
+  actor_name: string
+  action: string
+  target_table: string | null
+  target_id: string | null
+  created_at: string
+}
 
 const ACTION_LABELS: Record<AuditAction, { label: string; color: string }> = {
   USER_LOGIN: { label: "User Login", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },

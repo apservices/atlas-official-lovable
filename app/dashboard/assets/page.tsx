@@ -130,7 +130,7 @@ export default function AssetsPage() {
                           <div className="flex items-center gap-2">
                             <span className="font-mono text-xs text-primary">{forge.digitalTwinId}</span>
                             <span className="text-muted-foreground">-</span>
-                            <span>{model?.name || "Unknown"}</span>
+                            <span>{model?.full_name || "Unknown"}</span>
                             {isLicensed && (
                               <Badge className="bg-green-500/20 text-green-400 text-xs ml-2">Licensed</Badge>
                             )}

@@ -190,7 +190,7 @@ export function ModelTable({ models, onUpdate }: ModelTableProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Archive Model</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to archive <strong>{archiveModel?.name}</strong>? This will prevent any new forges
+              Are you sure you want to archive <strong>{archiveModel?.full_name}</strong>? This will prevent any new forges
               from being created for this model.
             </AlertDialogDescription>
           </AlertDialogHeader>

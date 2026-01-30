@@ -44,7 +44,7 @@ export function LicenseList({ licenses, models, certifiedForges, canRevoke, onRe
     const forge = certifiedForges.find((f) => f.digitalTwinId === digitalTwinId)
     if (!forge) return "Unknown"
     const model = models.get(forge.modelId)
-    return model?.name || "Unknown"
+    return model?.full_name || "Unknown"
   }
 
   const handleRevoke = () => {

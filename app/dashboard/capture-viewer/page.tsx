@@ -138,7 +138,7 @@ export default function CaptureViewerPage() {
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-xs">{forge.digital_twin_id || forge.id.slice(0, 8)}</span>
                           <span className="text-muted-foreground">-</span>
-                          <span>{model?.name || "Unknown"}</span>
+                          <span>{model?.full_name || "Unknown"}</span>
                           <Badge variant="outline" className="text-[10px]">
                             {forge.state}
                           </Badge>

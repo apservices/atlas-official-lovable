@@ -230,7 +230,7 @@ export default function ValidationPage() {
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-xs">{forge.id}</span>
                           <span className="text-muted-foreground">-</span>
-                          <span>{model?.name || "Unknown"}</span>
+                          <span>{model?.full_name || "Unknown"}</span>
                         </div>
                       </SelectItem>
                     )

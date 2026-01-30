@@ -36,7 +36,7 @@ export default function ForgesPage() {
     const model = models.get(forge.modelId)
     const matchesSearch =
       forge.id.toLowerCase().includes(search.toLowerCase()) ||
-      model?.name.toLowerCase().includes(search.toLowerCase()) ||
+      model?.full_name.toLowerCase().includes(search.toLowerCase()) ||
       model?.internalId.toLowerCase().includes(search.toLowerCase())
 
     const matchesState = stateFilter === "ALL" || forge.state === stateFilter
@@ -99,7 +99,7 @@ export default function ForgesPage() {
                       <div className="flex items-start justify-between mb-4">
                         <div>
                           <p className="font-mono text-sm text-muted-foreground">{forge.id}</p>
-                          <p className="font-medium text-foreground mt-1">{model?.name || "Unknown Model"}</p>
+                          <p className="font-medium text-foreground mt-1">{model?.full_name || "Unknown Model"}</p>
                           <p className="text-xs text-muted-foreground">{model?.internalId}</p>
                         </div>
                         <StateBadge state={forge.state} />

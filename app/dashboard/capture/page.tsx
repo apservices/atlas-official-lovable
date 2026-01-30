@@ -121,7 +121,7 @@ export default function CapturePage() {
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-xs">{forge.id.slice(0, 8)}</span>
                           <span className="text-muted-foreground">-</span>
-                          <span>{model?.name || "Unknown"}</span>
+                          <span>{model?.full_name || "Unknown"}</span>
                           <span className="text-xs text-muted-foreground">({forge.capture_progress || 0}/72)</span>
                         </div>
                       </SelectItem>
