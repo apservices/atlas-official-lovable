@@ -10,7 +10,7 @@ function validateApiKey(request: NextRequest): boolean {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     if (!validateApiKey(request)) {
@@ -18,6 +18,7 @@ export async function GET(
     }
 
     const licenseId = params.id
+    const { id } = context.params;
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY

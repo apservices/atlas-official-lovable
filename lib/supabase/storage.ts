@@ -95,21 +95,27 @@ class SupabaseStorage {
       const path = `${forgeId}/${angle}.${extension}`
 
       try {
+        console.log(`[Storage] Uploading file ${i + 1}/${files.length}: ${file.name} (${file.size} bytes)`)
         const result = await this.uploadFile("captures", path, file, { upsert: true })
         if (result) {
+          console.log(`[Storage] Successfully uploaded: ${result.path}`)
           results.push({
             ...result,
             fileName: file.name,
             angle,
           })
+        } else {
+          console.error(`[Storage] Upload returned null for: ${file.name}`)
         }
       } catch (error) {
-        console.error(`[v0] Error uploading capture ${i + 1}:`, error)
+        console.error(`[Storage] Error uploading capture ${i + 1}:`, error)
+        throw error // Re-throw to let caller handle
       }
 
       onProgress?.(i + 1, files.length)
     }
 
+    console.log(`[Storage] Upload complete. Successfully uploaded ${results.length}/${files.length} files`)
     return results
   }
 

@@ -16,10 +16,8 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { LoadingCard } from "@/components/loading-state"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { LoadingState } from "@/components/loading-state"
+
 
 interface SupabaseLicense {
   id: string

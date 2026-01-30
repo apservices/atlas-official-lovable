@@ -180,19 +180,19 @@ export function GuidedCaptureInterface({ forge, model, onComplete, onBack }: Gui
         if (uploadResult) {
           // Create capture record in database
           await dataStore.createCapture({
+            model_id: model.id,
             forge_id: forge.id,
             digital_twin_id: forge.digital_twin_id,
             angle: currentStep.id,
             file_name: `capture_${currentStep.id}.jpg`,
-            file_url: uploadResult.url,
-            file_path: uploadResult.path,
+            asset_url: uploadResult.url,
+            asset_type: "PHOTO",
             file_size: blob.size,
             mime_type: "image/jpeg",
             resolution_width: canvas.width,
             resolution_height: canvas.height,
-            capture_type: "PHOTO",
+            stage: "CAPTURE",
             status: "validated",
-            uploaded_by: user.id,
           })
         }
       }

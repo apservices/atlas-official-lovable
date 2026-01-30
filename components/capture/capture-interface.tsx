@@ -91,19 +91,19 @@ export function CaptureInterface({ forge, model, onComplete }: CaptureInterfaceP
       // Create capture records in database
       for (const result of results) {
         await dataStore.createCapture({
+          model_id: model.id,
           forge_id: forge.id,
           digital_twin_id: forge.digital_twin_id,
           angle: result.angle,
           file_name: result.fileName,
-          file_url: result.url,
-          file_path: result.path,
-          file_size: 0, // Will be updated after processing
+          asset_url: result.url,
+          asset_type: "PHOTO",
+          file_size: 0,
           mime_type: "image/jpeg",
           resolution_width: 0,
           resolution_height: 0,
-          capture_type: "PHOTO",
+          stage: "CAPTURE",
           status: "pending",
-          uploaded_by: user.id,
         })
       }
 
