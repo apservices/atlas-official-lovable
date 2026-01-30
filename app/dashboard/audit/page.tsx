@@ -92,6 +92,7 @@ const ACTION_LABELS: Record<AuditAction, { label: string; color: string }> = {
   PREVIEW_EXPIRED: { label: "Preview Expired", color: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
   VTG_JOB_CREATED: { label: "VTG Job Created", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
   VTG_JOB_COMPLETED: { label: "VTG Job Completed", color: "bg-green-500/20 text-green-400 border-green-500/30" },
+  VTG_JOB_FAILED: { label: "VTG Job Failed", color: "bg-rose-500/20 text-rose-400 border-rose-500/30" },
   ASSET_CREATED: { label: "Asset Created", color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
   ASSET_DOWNLOADED: { label: "Asset Downloaded", color: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30" },
   LICENSE_ACTIVATED: { label: "License Activated", color: "bg-green-500/20 text-green-400 border-green-500/30" },
