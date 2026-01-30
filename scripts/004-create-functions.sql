@@ -147,31 +147,31 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Function to generate integrity hash for audit logs
+-- Função para atualizar updated_at
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Função para gerar hash de auditoria
 CREATE OR REPLACE FUNCTION generate_audit_hash()
 RETURNS TRIGGER AS $$
 DECLARE
   prev_hash TEXT;
   data_string TEXT;
 BEGIN
-  -- Get previous log hash
-  SELECT integrity_hash INTO prev_hash
-  FROM audit_logs
-  ORDER BY created_at DESC
-  LIMIT 1;
-  
-  -- Create data string
+  SELECT integrity_hash INTO prev_hash FROM audit_logs ORDER BY created_at DESC LIMIT 1;
   data_string := NEW.actor_id || ':' || NEW.action || ':' || COALESCE(NEW.target_id::TEXT, '') || ':' || NEW.created_at;
-  
-  -- Generate hash
   NEW.integrity_hash := encode(sha256((COALESCE(prev_hash, '') || ':' || data_string)::bytea), 'hex');
   NEW.previous_log_hash := prev_hash;
-  
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger for audit log integrity
+-- Trigger para auditoria
 DROP TRIGGER IF EXISTS audit_log_integrity ON audit_logs;
 CREATE TRIGGER audit_log_integrity
   BEFORE INSERT ON audit_logs

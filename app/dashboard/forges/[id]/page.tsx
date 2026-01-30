@@ -7,7 +7,6 @@ import { dataStore } from "@/lib/data-store"
 import type { Forge, Model } from "@/lib/types"
 import { ForgeStateMachine } from "@/lib/forge-state-machine"
 import { useAuth } from "@/lib/auth-context"
-import { getForgeActions } from "@/lib/rbac"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -184,8 +183,7 @@ export default function ForgeDetailPage() {
   const nextState = stateMachine.getNextState()
   const prevState = stateMachine.getPreviousState()
 
-  // Get actions based on RBAC
-  const actions = getForgeActions(user?.role, forge.state)
+
 
   return (
     <div>
@@ -229,7 +227,7 @@ export default function ForgeDetailPage() {
               <div className="flex items-center justify-between pt-4 border-t border-border">
                 <Button
                   variant="outline"
-                  disabled={!actions.canRollback || isProcessing}
+                  disabled={!(user?.role === "admin" || user?.role === "operator") || isProcessing}
                   onClick={() => setConfirmAction("rollback")}
                 >
                   {isProcessing && confirmAction === "rollback" ? (

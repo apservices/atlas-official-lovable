@@ -2,40 +2,7 @@
 
 export type UserRole = "ADMIN" | "OPERATOR" | "MODEL" | "CLIENT"
 
-export const ROLE_SCOPES: Record<UserRole, string[]> = {
-  ADMIN: ["*"], // Full access
-  OPERATOR: [
-    "models:read",
-    "models:create",
-    "models:update",
-    "forges:read",
-    "forges:create",
-    "forges:transition",
-    "captures:read",
-    "captures:upload",
-    "validation:execute",
-    "certification:execute",
-    "capture_viewer:read",
-    "vtp:generate",
-    "vtp:read",
-    "vtg:generate",
-    "vtg:read",
-    "assets:read",
-    "licenses:read",
-    "licenses:create",
-  ],
-  MODEL: [
-    "models:read:self",
-    "forges:read:self",
-    "certificates:read:self",
-    "capture_viewer:read:self",
-    "vtp:read:self",
-    "assets:read:self",
-    "career:read",
-    "career:consents",
-  ],
-  CLIENT: ["certificates:read", "assets:read:licensed", "assets:download:licensed", "licenses:read:self"],
-}
+
 
 export interface User {
   id: string
@@ -239,6 +206,7 @@ export type AuditAction =
   | "PREVIEW_EXPIRED"
   | "VTG_JOB_CREATED"
   | "VTG_JOB_COMPLETED"
+  | "VTG_JOB_FAILED"
   | "ASSET_CREATED"
   | "ASSET_DOWNLOADED"
   | "LICENSE_ACTIVATED"

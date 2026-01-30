@@ -134,7 +134,7 @@ export function AssetGallery({ digitalTwinId, hasActiveLicense, isClient }: Asse
                     className="group relative aspect-[3/4] rounded-lg overflow-hidden border border-border hover:border-primary/50 transition-all bg-muted focus:outline-none focus:ring-2 focus:ring-primary text-left"
                   >
                     <Image
-                      src={asset.fileUrl || "/placeholder.svg"}
+                      src={asset.fileUrl}
                       alt={`Asset ${asset.category}`}
                       fill
                       className="object-cover"
@@ -203,7 +203,7 @@ export function AssetGallery({ digitalTwinId, hasActiveLicense, isClient }: Asse
             <div className="space-y-4">
               <div className="relative aspect-[4/5] rounded-lg overflow-hidden bg-muted">
                 <Image
-                  src={selectedAsset.fileUrl || "/placeholder.svg"}
+                  src={selectedAsset.fileUrl}
                   alt={selectedAsset.category}
                   fill
                   className="object-contain"

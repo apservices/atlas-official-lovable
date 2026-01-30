@@ -68,11 +68,12 @@ class Phase2Store {
     if (typeof window === "undefined") return
 
     try {
-      const captureRaw = localStorage.getItem("forj_capture_assets_v2")
-      const previewsRaw = localStorage.getItem("forj_previews")
-      const jobsRaw = localStorage.getItem("forj_vtg_jobs")
-      const assetsRaw = localStorage.getItem("forj_visual_assets")
-      const licensesRaw = localStorage.getItem("forj_licenses")
+      // TODO: Substituir por fetch do Supabase
+      const captureRaw = null
+      const previewsRaw = null
+      const jobsRaw = null
+      const assetsRaw = null
+      const licensesRaw = null
 
       // Capture Assets (agrupados por digitalTwinId)
       if (captureRaw) {
@@ -109,7 +110,7 @@ class Phase2Store {
             targetMap.set(item.id, normalized as T)
           })
         } catch (e) {
-          systemLogger?.warn(`Erro ao parsear ${raw.slice(0, 30)}...`, "Phase2Store", e)
+          systemLogger?.warn(`Erro ao parsear ${raw.slice(0, 30)}...`, "Phase2Store", e as Record<string, unknown> | undefined)
         }
       }
 
@@ -131,11 +132,7 @@ class Phase2Store {
         captureAssetsObj[digitalTwinId] = assets
       })
 
-      localStorage.setItem("forj_capture_assets_v2", JSON.stringify(captureAssetsObj))
-      localStorage.setItem("forj_previews", JSON.stringify(Array.from(this.previews.values())))
-      localStorage.setItem("forj_vtg_jobs", JSON.stringify(Array.from(this.vtgJobs.values())))
-      localStorage.setItem("forj_visual_assets", JSON.stringify(Array.from(this.visualAssets.values())))
-      localStorage.setItem("forj_licenses", JSON.stringify(Array.from(this.licenses.values())))
+      // TODO: Substituir por insert/update no Supabase
     } catch (error) {
       systemLogger?.error("Failed to save Phase 2 data to storage", "Phase2Store", error as Error)
     }
@@ -180,7 +177,7 @@ class Phase2Store {
         stage: "NORMALIZED",
         angle,
         fileName: `capture_${angle}.jpg`,
-        fileUrl: `/placeholder.svg?height=800&width=600&query=professional headshot ${angle} angle`,
+        fileUrl: "",
         fileSize: 2048000 + Math.floor(Math.random() * 500000),
         mimeType: "image/jpeg",
         resolution: { width: 4000, height: 6000 },
@@ -361,9 +358,7 @@ class Phase2Store {
       digitalTwinId,
       generatedBy,
       previewType,
-      imageUrl: `/placeholder.svg?height=1024&width=768&query=${previewType
-        .toLowerCase()
-        .replace(/_/g, " ")} AI portrait preview watermarked`,
+        imageUrl: `${previewType.toLowerCase().replace(/_/g, " ")} AI portrait preview watermarked`,
       watermarked: true,
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       createdAt: new Date(),
@@ -527,7 +522,7 @@ class Phase2Store {
       vtgJobId: job.id,
       type: job.mode === "PREVIEW" ? "PREVIEW" : "LICENSED",
       category: job.category,
-      fileUrl: `/placeholder.svg?height=2048&width=1536&query=${job.category.toLowerCase().replace(/_/g, " ")} professional AI portrait`,
+      fileUrl: "",
       hash: generateAssetHash(`${job.id}_${job.digitalTwinId}_${Date.now()}`),
       watermarked: job.mode === "PREVIEW",
       metadata: {
@@ -699,9 +694,10 @@ class Phase2Store {
       timestamp,
     }
 
-    const logs = JSON.parse(localStorage.getItem("forj_audit_logs") || "[]")
+    // TODO: Substituir por fetch do Supabase
+    const logs = []
     logs.push(newLog)
-    localStorage.setItem("forj_audit_logs", JSON.stringify(logs))
+    // TODO: Substituir por insert/update no Supabase
   }
 
   // ────────────────────────────────────────────────────────────────────────────

@@ -10,14 +10,14 @@ function validateApiKey(request: NextRequest): boolean {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     if (!validateApiKey(request)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const modelId = params.id
+    const { id: modelId } = await params;
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY

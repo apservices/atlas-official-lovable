@@ -25,7 +25,8 @@ class SystemLogger {
 
   private loadFromStorage() {
     if (typeof window === "undefined") return
-    const stored = localStorage.getItem("atlas_system_logs")
+    // TODO: Substituir por fetch do Supabase
+    const stored = null // localStorage.getItem("atlas_system_logs")
     if (stored) {
       this.logs = JSON.parse(stored).map((l: LogEntry) => ({
         ...l,
@@ -38,7 +39,8 @@ class SystemLogger {
     if (typeof window === "undefined") return
     // Keep only recent logs
     const recentLogs = this.logs.slice(-this.maxLogs)
-    localStorage.setItem("atlas_system_logs", JSON.stringify(recentLogs))
+    // TODO: Substituir por insert/update no Supabase
+    // localStorage.setItem("atlas_system_logs", JSON.stringify(recentLogs))
   }
 
   private createEntry(
@@ -168,7 +170,8 @@ export function getSystemHealth(): SystemHealth {
   if (errorRate > 10) status = "unhealthy"
   else if (errorRate > 5) status = "degraded"
 
-  // Get metrics from localStorage (simulated)
+  // TODO: Substituir por fetch do Supabase
+  // Get metrics from localStorage (simulado)
   let metrics = {
     totalForges: 0,
     certifiedForges: 0,
@@ -178,8 +181,9 @@ export function getSystemHealth(): SystemHealth {
   }
 
   if (typeof window !== "undefined") {
-    const forges = JSON.parse(localStorage.getItem("atlas_forges") || "[]")
-    const models = JSON.parse(localStorage.getItem("atlas_models") || "[]")
+    // TODO: Substituir por fetch do Supabase
+    const forges = []
+    const models = []
 
     metrics = {
       totalForges: forges.length,

@@ -3,10 +3,11 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
 import { createClient } from "@/lib/supabase/client"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
+
+import type { UserRole } from "@/lib/types"
 import type { Database } from "@/lib/supabase/database.types"
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"]
-type UserRole = Database["public"]["Enums"]["user_role"]
 
 export interface User {
   id: string
@@ -16,6 +17,7 @@ export interface User {
   avatarUrl?: string
   linkedModelId?: string
   linkedBrandId?: string
+  linkedClientId?: string
 }
 
 interface AuthContextType {
@@ -37,30 +39,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
-const ROLE_SCOPE_MAP: Record<UserRole, string[]> = {
-  admin: ["*"],
-  model: [
-    "models:read:self",
-    "forges:read:self",
-    "certificates:read:self",
-    "capture_viewer:read:self",
-    "vtp:read:self",
-    "assets:read:self",
-    "career:read",
-    "career:consents",
-  ],
-  brand: [
-    "models:read",
-    "certificates:read",
-    "assets:read:licensed",
-    "assets:download:licensed",
-    "licenses:read:self",
-    "licenses:create",
-    "contracts:read",
-    "contracts:sign",
-  ],
-  viewer: ["certificates:read", "assets:read:licensed"],
-}
+
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -114,14 +93,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const { linkedModelId, linkedBrandId } = await fetchLinkedEntities(profileData)
 
+      // Map Supabase role to app UserRole
+      let mappedRole: import("@/lib/types").UserRole = "CLIENT";
+      switch (profileData.role) {
+        case "admin":
+          mappedRole = "ADMIN";
+          break;
+        case "model":
+          mappedRole = "MODEL";
+          break;
+        case "brand":
+          mappedRole = "OPERATOR";
+          break;
+        case "viewer":
+          mappedRole = "CLIENT";
+          break;
+      }
+      // Add linkedClientId for CLIENT role
+      let linkedClientId: string | undefined = undefined;
+      if (mappedRole === "CLIENT") {
+        linkedClientId = profileData.id;
+      }
       return {
         id: authUser.id,
         email: authUser.email || profileData.email,
         name: profileData.full_name,
-        role: profileData.role,
+        role: mappedRole,
         avatarUrl: profileData.avatar_url || undefined,
         linkedModelId,
         linkedBrandId,
+        linkedClientId,
       }
     },
     [fetchProfile, fetchLinkedEntities],
@@ -262,28 +263,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [supabase, user])
 
-  const hasPermission = useCallback(
-    (requiredRole: UserRole) => {
-      if (!user) return false
-      if (user.role === "admin") return true
-      return user.role === requiredRole
-    },
-    [user],
-  )
 
-  const hasScope = useCallback(
-    (scope: string) => {
-      if (!user) return false
-      const scopes = ROLE_SCOPE_MAP[user.role]
-      if (scopes.includes("*")) return true
-      return scopes.some((s) => {
-        if (s === scope) return true
-        const pattern = s.replace(/:\*$/, "")
-        return scope.startsWith(pattern)
-      })
-    },
-    [user],
-  )
 
   return (
     <AuthContext.Provider
@@ -294,8 +274,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         signup,
         logout,
-        hasPermission,
-        hasScope,
         refreshProfile,
       }}
     >

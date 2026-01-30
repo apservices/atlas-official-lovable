@@ -284,3 +284,8 @@ END $$;
 
 -- Migration complete
 COMMIT;
+
+-- 007-fix-schema-alignment.sql
+-- Corrige alinhamento de schema e tipos
+-- Exemplo: Adicionar colunas faltantes, corrigir tipos
+-- Adicione comandos ALTER TABLE conforme necessário

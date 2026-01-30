@@ -1,0 +1,32 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build Next.js app",
+			"type": "shell",
+			"command": "pnpm build",
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Build Next.js app",
+			"type": "shell",
+			"command": "pnpm build",
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Deploy to Vercel",
+			"type": "shell",
+			"command": "vercel --prod",
+			"isBackground": false,
+			"group": "deploy"
+		}
+	]
+}

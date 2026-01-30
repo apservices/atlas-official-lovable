@@ -87,6 +87,17 @@ const ACTION_LABELS: Record<AuditAction, { label: string; color: string }> = {
   RATE_LIMIT_HIT: { label: "Rate Limited", color: "bg-amber-500/20 text-amber-400 border-amber-500/30" },
   SECURITY_EVENT: { label: "Security Event", color: "bg-rose-500/20 text-rose-400 border-rose-500/30" },
   SYSTEM_ERROR: { label: "System Error", color: "bg-rose-500/20 text-rose-400 border-rose-500/30" },
+  // Phase 2 audit actions (placeholders, update as needed)
+  PREVIEW_GENERATED: { label: "Preview Generated", color: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30" },
+  PREVIEW_EXPIRED: { label: "Preview Expired", color: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
+  VTG_JOB_CREATED: { label: "VTG Job Created", color: "bg-blue-500/20 text-blue-400 border-blue-500/30" },
+  VTG_JOB_COMPLETED: { label: "VTG Job Completed", color: "bg-green-500/20 text-green-400 border-green-500/30" },
+  ASSET_CREATED: { label: "Asset Created", color: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" },
+  ASSET_DOWNLOADED: { label: "Asset Downloaded", color: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30" },
+  LICENSE_ACTIVATED: { label: "License Activated", color: "bg-green-500/20 text-green-400 border-green-500/30" },
+  LICENSE_EXPIRED: { label: "License Expired", color: "bg-gray-500/20 text-gray-400 border-gray-500/30" },
+  LICENSE_REVOKED: { label: "License Revoked", color: "bg-rose-500/20 text-rose-400 border-rose-500/30" },
+  CAPTURE_VIEWED: { label: "Capture Viewed", color: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30" },
 }
 
 const ALL_ACTIONS = Object.keys(ACTION_LABELS) as AuditAction[]
@@ -104,7 +115,7 @@ function generateIntegrityHash(log: AuditLog): string {
 }
 
 export default function AuditLogsPage() {
-  const { hasPermission } = useAuth()
+  const { user } = useAuth()
   const [logs, setLogs] = useState<AuditLog[]>([])
   const [models, setModels] = useState<Model[]>([])
   const [forges, setForges] = useState<Forge[]>([])
@@ -170,13 +181,13 @@ export default function AuditLogsPage() {
   }, [logs, search, actionFilter, modelFilter, forgeFilter, dateRange])
 
   // Redirect if not admin
-  if (!hasPermission("ADMIN")) {
+  if (!user || (user.role !== "ADMIN" && user.role !== "OPERATOR")) {
     return (
       <div className="flex items-center justify-center h-96">
         <Card className="bg-card border-border p-6 text-center">
           <Lock className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-lg font-medium text-foreground mb-2">Access Denied</h3>
-          <p className="text-sm text-muted-foreground">Only administrators can view audit logs.</p>
+          <p className="text-sm text-muted-foreground">Only administrators or operators can view audit logs.</p>
         </Card>
       </div>
     )

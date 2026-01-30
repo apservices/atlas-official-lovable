@@ -419,13 +419,13 @@ class DataStore {
       previousLogHash: this.lastAuditLogHash || undefined,
     }
 
-    const logs = JSON.parse(localStorage.getItem("atlas_audit_logs") || "[]")
-    logs.push(newLog)
-    localStorage.setItem("atlas_audit_logs", JSON.stringify(logs))
+    // TODO: Substituir por fetch/insert/update no Supabase
+    // const logs = JSON.parse(localStorage.getItem("atlas_audit_logs") || "[]")
+    // logs.push(newLog)
+    // localStorage.setItem("atlas_audit_logs", JSON.stringify(logs))
 
-    // Update chain hash
-    this.lastAuditLogHash = integrityHash
-    localStorage.setItem("atlas_last_audit_hash", integrityHash)
+    // this.lastAuditLogHash = integrityHash
+    // localStorage.setItem("atlas_last_audit_hash", integrityHash)
 
     return newLog
   }
@@ -433,7 +433,8 @@ class DataStore {
   getAuditLogs(): AuditLog[] {
     if (typeof window === "undefined") return []
     try {
-      const logs = JSON.parse(localStorage.getItem("atlas_audit_logs") || "[]")
+      // TODO: Substituir por fetch do Supabase
+      const logs = []
       return logs
         .map((l: AuditLog) => ({
           ...l,

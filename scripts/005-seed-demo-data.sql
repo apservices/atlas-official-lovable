@@ -15,3 +15,11 @@
 
 -- For initial testing, you can create profiles via the Auth signup flow
 -- The handle_new_user trigger will automatically create profile records
+
+-- 005-seed-demo-data.sql (opcional)
+-- Popula dados de exemplo para testes
+-- Execute apenas em ambiente de desenvolvimento
+-- Exemplo:
+INSERT INTO profiles (id, email, full_name, role) VALUES (uuid_generate_v4(), 'admin@test.com', 'Admin', 'admin');
+INSERT INTO brands (id, name) VALUES (uuid_generate_v4(), 'Demo Brand');
+INSERT INTO models (id, full_name, email, status) VALUES (uuid_generate_v4(), 'Demo Model', 'model@test.com', 'active');

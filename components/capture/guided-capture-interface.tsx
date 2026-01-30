@@ -173,7 +173,7 @@ export function GuidedCaptureInterface({ forge, model, onComplete, onBack }: Gui
 
       // Upload to Supabase Storage
       if (storage) {
-        const uploadResult = await storage.uploadFile("captures", `${forge.id}/${currentStep.id}.jpg`, file, {
+        const uploadResult = await storage.uploadFile("captures", `captures/${model.id}/${currentStep.id}.jpg`, file, {
           upsert: true,
         })
 
@@ -303,7 +303,7 @@ export function GuidedCaptureInterface({ forge, model, onComplete, onBack }: Gui
                 Guided Capture
               </CardTitle>
               <CardDescription>
-                {model.name} — Step {currentStepIndex + 1} of {GUIDED_CAPTURE_STEPS.length}
+                    {model.full_name} — Step {currentStepIndex + 1} of {GUIDED_CAPTURE_STEPS.length}
               </CardDescription>
             </div>
             <Badge variant="outline" className="font-mono">
@@ -376,7 +376,7 @@ export function GuidedCaptureInterface({ forge, model, onComplete, onBack }: Gui
           {/* Captured Image Preview */}
           {lastCapture && (
             <img
-              src={lastCapture || "/placeholder.svg"}
+              src={lastCapture}
               alt="Captured"
               className="w-full h-full object-cover"
               crossOrigin="anonymous"

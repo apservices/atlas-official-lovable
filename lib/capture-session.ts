@@ -62,7 +62,8 @@ class CaptureSessionManager {
 
   private loadFromStorage() {
     try {
-      const stored = localStorage.getItem("atlas_capture_sessions")
+      // TODO: Substituir por fetch do Supabase
+      const stored = null // localStorage.getItem("atlas_capture_sessions")
       if (stored) {
         const parsed = JSON.parse(stored)
         parsed.forEach((session: CaptureSession) => {
@@ -96,7 +97,8 @@ class CaptureSessionManager {
         ...session,
         capturedImages: Object.fromEntries(session.capturedImages),
       }))
-      localStorage.setItem("atlas_capture_sessions", JSON.stringify(sessionsArray))
+      // TODO: Substituir por insert/update no Supabase
+      // localStorage.setItem("atlas_capture_sessions", JSON.stringify(sessionsArray))
     } catch {
       // Ignore save errors
     }

@@ -82,7 +82,7 @@ class SupabaseStorage {
    * Upload multiple capture images
    */
   async uploadCaptures(
-    forgeId: string,
+    modelId: string,
     files: File[],
     onProgress?: (uploaded: number, total: number) => void,
   ): Promise<{ url: string; path: string; fileName: string; angle: string }[]> {
@@ -92,7 +92,7 @@ class SupabaseStorage {
       const file = files[i]
       const angle = `angle-${String(i + 1).padStart(3, "0")}`
       const extension = file.name.split(".").pop() || "jpg"
-      const path = `${forgeId}/${angle}.${extension}`
+      const path = `captures/${modelId}/${angle}.${extension}`
 
       try {
         console.log(`[Storage] Uploading file ${i + 1}/${files.length}: ${file.name} (${file.size} bytes)`)
@@ -129,7 +129,7 @@ class SupabaseStorage {
   ): Promise<{ url: string; path: string } | null> {
     const extension = file.name.split(".").pop() || "jpg"
     const timestamp = Date.now()
-    const path = `${digitalTwinId}/${previewType}_${timestamp}.${extension}`
+    const path = `previews/${digitalTwinId}/${previewType}_${timestamp}.${extension}`
 
     return this.uploadFile("previews", path, file, { upsert: false })
   }
@@ -138,13 +138,13 @@ class SupabaseStorage {
    * Upload a visual asset
    */
   async uploadAsset(
-    digitalTwinId: string,
+    licenseId: string,
     file: File,
     category: string,
   ): Promise<{ url: string; path: string } | null> {
     const extension = file.name.split(".").pop() || "png"
     const timestamp = Date.now()
-    const path = `${digitalTwinId}/${category}_${timestamp}.${extension}`
+    const path = `assets/${licenseId}/${category}_${timestamp}.${extension}`
 
     return this.uploadFile("assets", path, file, { upsert: false })
   }
@@ -154,7 +154,7 @@ class SupabaseStorage {
    */
   async uploadAvatar(userId: string, file: File): Promise<{ url: string; path: string } | null> {
     const extension = file.name.split(".").pop() || "jpg"
-    const path = `${userId}/avatar.${extension}`
+    const path = `avatars/${userId}.png`
 
     return this.uploadFile("avatars", path, file, { upsert: true })
   }
@@ -163,7 +163,7 @@ class SupabaseStorage {
    * Get public URL for an avatar
    */
   getAvatarUrl(userId: string): string {
-    const { data } = this.supabase.storage.from("avatars").getPublicUrl(`${userId}/avatar.jpg`)
+    const { data } = this.supabase.storage.from("avatars").getPublicUrl(`avatars/${userId}.png`)
     return data.publicUrl
   }
 }

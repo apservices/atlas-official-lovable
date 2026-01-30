@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { dataStore } from "@/lib/data-store"
 import { phase2Store } from "@/lib/phase2-store"
 import { useAuth } from "@/lib/auth-context"
-import type { Forge, Model, License } from "@/lib/types"
+import type { Forge, Model, License, UserRole } from "@/lib/types"
 import { FolderOpen, AlertCircle, Shield } from "lucide-react"
 
 export default function AssetsPage() {
@@ -26,7 +26,7 @@ export default function AssetsPage() {
       let forges = dataStore.getForges().filter((f) => f.state === "CERTIFIED" && f.digitalTwinId)
 
       // CLIENT can only see forges they have licenses for
-      if (user?.role === "CLIENT" && user.linkedClientId) {
+      if (user?.role === ("CLIENT" as UserRole) && user.linkedClientId) {
         const clientLicenses = phase2Store.getLicensesByClient(user.linkedClientId)
         const licensedTwinIds = new Set(clientLicenses.map((l) => l.digitalTwinId))
         forges = forges.filter((f) => f.digitalTwinId && licensedTwinIds.has(f.digitalTwinId))
@@ -130,7 +130,7 @@ export default function AssetsPage() {
                           <div className="flex items-center gap-2">
                             <span className="font-mono text-xs text-primary">{forge.digitalTwinId}</span>
                             <span className="text-muted-foreground">-</span>
-                            <span>{model?.full_name || "Unknown"}</span>
+                            <span>{model?.name || "Unknown"}</span>
                             {isLicensed && (
                               <Badge className="bg-green-500/20 text-green-400 text-xs ml-2">Licensed</Badge>
                             )}

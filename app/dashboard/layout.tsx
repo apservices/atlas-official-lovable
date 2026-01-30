@@ -4,7 +4,6 @@ import type React from "react"
 import { useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/lib/auth-context"
-import { canAccessRoute } from "@/lib/rbac"
 import { Sidebar } from "@/components/dashboard/sidebar"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { LoadingOverlay } from "@/components/loading-state"
@@ -40,20 +39,12 @@ export default function DashboardLayout({
   const router = useRouter()
   const pathname = usePathname()
   const { user, isLoading } = useAuth()
-  const [hasAccess, setHasAccess] = useState(true)
 
   useEffect(() => {
     if (!isLoading && !user) {
       router.push("/login")
-      return
     }
-
-    // Check route access based on role
-    if (user) {
-      const access = canAccessRoute(user.role, pathname)
-      setHasAccess(access)
-    }
-  }, [user, isLoading, router, pathname])
+  }, [user, isLoading, router])
 
   if (isLoading) {
     return (
@@ -67,7 +58,9 @@ export default function DashboardLayout({
     return null
   }
 
-  if (!hasAccess) {
+
+  // Only allow access for admin or operator
+  if (user && user.role !== "admin" && user.role !== "operator") {
     return (
       <div className="min-h-screen bg-background">
         <Sidebar />

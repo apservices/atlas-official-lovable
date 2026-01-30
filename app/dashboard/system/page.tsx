@@ -35,7 +35,7 @@ const LOG_LEVEL_STYLES: Record<LogLevel, { icon: typeof Info; color: string }> =
 }
 
 export default function SystemLogsPage() {
-  const { hasPermission } = useAuth()
+  const { user } = useAuth()
   const [logs, setLogs] = useState<ReturnType<typeof systemLogger.getLogs>>([])
   const [levelFilter, setLevelFilter] = useState<LogLevel | "all">("all")
   const [health, setHealth] = useState(getSystemHealth())
@@ -64,13 +64,13 @@ export default function SystemLogsPage() {
     loadLogs()
   }, [levelFilter])
 
-  if (!hasPermission("ADMIN")) {
+  if (!user || (user.role !== "ADMIN" && user.role !== "OPERATOR")) {
     return (
       <div className="flex items-center justify-center h-96">
         <Card className="bg-card border-border p-6 text-center">
           <Lock className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-lg font-medium text-foreground mb-2">Access Denied</h3>
-          <p className="text-sm text-muted-foreground">Only administrators can view system logs.</p>
+          <p className="text-sm text-muted-foreground">Only administrators or operators can view system logs.</p>
         </Card>
       </div>
     )

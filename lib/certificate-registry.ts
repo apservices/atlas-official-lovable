@@ -11,7 +11,8 @@ class CertificateRegistry {
   private loadFromStorage() {
     if (typeof window === "undefined") return
 
-    const stored = localStorage.getItem("atlas_certificates")
+    // TODO: Substituir por fetch do Supabase
+    const stored = null // localStorage.getItem("atlas_certificates")
     if (stored) {
       const parsed = JSON.parse(stored)
       parsed.forEach((c: Certificate) =>
@@ -27,7 +28,8 @@ class CertificateRegistry {
 
   private saveToStorage() {
     if (typeof window === "undefined") return
-    localStorage.setItem("atlas_certificates", JSON.stringify(Array.from(this.certificates.values())))
+    // TODO: Substituir por insert/update no Supabase
+    // localStorage.setItem("atlas_certificates", JSON.stringify(Array.from(this.certificates.values())))
   }
 
   private generateVerificationCode(): string {

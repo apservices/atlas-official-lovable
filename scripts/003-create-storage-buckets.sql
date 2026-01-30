@@ -2,13 +2,16 @@
 -- Version 1.0.0
 
 -- Create storage buckets
-INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-VALUES 
-  ('captures', 'captures', false, 52428800, ARRAY['image/jpeg', 'image/png', 'image/webp']),
-  ('previews', 'previews', false, 52428800, ARRAY['image/jpeg', 'image/png', 'image/webp']),
-  ('assets', 'assets', false, 104857600, ARRAY['image/jpeg', 'image/png', 'image/webp', 'application/pdf']),
-  ('contracts', 'contracts', false, 10485760, ARRAY['application/pdf']),
-  ('avatars', 'avatars', true, 5242880, ARRAY['image/jpeg', 'image/png', 'image/webp']);
+-- Execute manualmente no painel Supabase Storage se necessário
+-- Exemplo:
+-- supabase.storage.createBucket('captures', { public: false })
+-- supabase.storage.createBucket('previews', { public: false })
+-- supabase.storage.createBucket('assets', { public: false })
+-- supabase.storage.createBucket('contracts', { public: false })
+-- supabase.storage.createBucket('avatars', { public: false })
+-- supabase.storage.createBucket('licenses', { public: false })
+-- supabase.storage.createBucket('exports', { public: false })
+-- supabase.storage.createBucket('temp', { public: false })
 
 -- Storage policies for captures bucket
 CREATE POLICY "Admins can manage captures" ON storage.objects FOR ALL 

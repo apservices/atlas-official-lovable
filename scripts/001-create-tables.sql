@@ -4,14 +4,30 @@
 -- Enable necessary extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Create enum types
-CREATE TYPE user_role AS ENUM ('admin', 'model', 'brand', 'viewer');
-CREATE TYPE model_status AS ENUM ('pending', 'active', 'archived');
-CREATE TYPE capture_status AS ENUM ('pending', 'validated', 'rejected');
-CREATE TYPE license_status AS ENUM ('active', 'expired', 'revoked');
-CREATE TYPE contract_status AS ENUM ('draft', 'pending', 'signed', 'rejected');
-CREATE TYPE preview_status AS ENUM ('active', 'expired', 'deleted');
-CREATE TYPE vtg_job_status AS ENUM ('queued', 'processing', 'done', 'failed');
+-- Criação de tipos ENUM (idempotente)
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role') THEN
+    CREATE TYPE user_role AS ENUM ('admin', 'model', 'brand', 'viewer');
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'model_status') THEN
+    CREATE TYPE model_status AS ENUM ('pending', 'active', 'archived');
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'capture_status') THEN
+    CREATE TYPE capture_status AS ENUM ('pending', 'validated', 'rejected');
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'license_status') THEN
+    CREATE TYPE license_status AS ENUM ('active', 'expired', 'revoked');
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'contract_status') THEN
+    CREATE TYPE contract_status AS ENUM ('draft', 'pending', 'signed', 'rejected');
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'preview_status') THEN
+    CREATE TYPE preview_status AS ENUM ('active', 'expired', 'deleted');
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'vtg_job_status') THEN
+    CREATE TYPE vtg_job_status AS ENUM ('queued', 'processing', 'done', 'failed');
+  END IF;
+END $$;
 
 -- Profiles table (extends auth.users with RBAC)
 CREATE TABLE profiles (

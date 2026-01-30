@@ -286,3 +286,23 @@ CREATE POLICY "visual_assets_model_insert" ON visual_assets FOR INSERT
 
 -- 12. FINAL COMMIT
 COMMIT;
+
+-- 008-fix-rls-policies.sql
+-- Corrige políticas RLS para ambiente de desenvolvimento
+-- Exemplo: Permitir acesso amplo para testes
+-- Adicione comandos ALTER POLICY ou CREATE POLICY conforme necessário
+
+-- Exemplos de comandos para permitir acesso amplo
+-- ALTER POLICY "captures_admin_all" ON storage.objects
+--   USING (true);
+
+-- ALTER POLICY "captures_authenticated_upload" ON storage.objects
+--   WITH CHECK (true);
+
+-- ALTER POLICY "captures_authenticated_select" ON storage.objects
+--   USING (true);
+
+-- ALTER POLICY "captures_authenticated_update" ON storage.objects
+--   USING (true);
+
+-- Repita para outras políticas conforme necessário para testes em dev

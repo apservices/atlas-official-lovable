@@ -84,7 +84,7 @@ export function CaptureInterface({ forge, model, onComplete }: CaptureInterfaceP
       const filesToUpload = uploadedFiles.filter((f) => f.status === "pending").map((f) => f.file)
 
       // Upload to Supabase Storage
-      const results = await storage.uploadCaptures(forge.id, filesToUpload, (uploaded, total) => {
+      const results = await storage.uploadCaptures(model.id, filesToUpload, (uploaded, total) => {
         setUploadProgress((uploaded / total) * 100)
       })
 
@@ -180,7 +180,7 @@ export function CaptureInterface({ forge, model, onComplete }: CaptureInterfaceP
                 Manual Upload
               </CardTitle>
               <CardDescription>
-                {model.name} — {forge.capture_progress || 0}/72 captures
+                 {model.full_name} — {forge.capture_progress || 0}/72 captures
               </CardDescription>
             </div>
             <Badge variant="outline" className="font-mono">
@@ -260,7 +260,7 @@ export function CaptureInterface({ forge, model, onComplete }: CaptureInterfaceP
                 {uploadedFiles.map((file, index) => (
                   <div key={index} className="relative group aspect-square rounded-lg overflow-hidden bg-muted">
                     <img
-                      src={file.preview || "/placeholder.svg"}
+                      src={file.url || file.preview}
                       alt={`Capture ${index + 1}`}
                       className="w-full h-full object-cover"
                       crossOrigin="anonymous"
